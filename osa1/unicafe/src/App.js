@@ -1,17 +1,25 @@
 import React, { useState } from 'react'
 
 const Statistics = (props) => {
+  const All = props.good + props.bad + props.neutral
+  if (All > 0) {
   return (
     <>
-    <h1>statistics</h1>
     <p>good {props.good}</p>
     <p>neutral {props.neutral}</p>
     <p>bad {props.bad}</p>
-    <p>all {props.good + props.neutral + props.bad}</p>
-    <p>average {(props.good - props.bad) / (props.good + props.neutral + props.bad)}</p>
-    <p>positive {(props.good / (props.good + props.neutral + props.bad))*100} %</p>
+    <p>all {All}</p>
+    <p>average {(props.good - props.bad) / All}</p>
+    <p>positive {(props.good / All)*100} %</p>
     </>
   )
+  } else {
+    return (
+      <>
+      <p>No feedback given</p>
+      </>
+    )
+  }
 }
 
 const App = () => {
@@ -26,10 +34,11 @@ const App = () => {
       <button onClick={() => setGood(good + 1)}>good</button>
       <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
       <button onClick={() => setBad(bad + 1)}>bad</button>
+      <h1>statistics</h1>
       <Statistics good={good} neutral={neutral} bad={bad}></Statistics>
     </div>
   )
 }
 
 export default App
-//1.8 tehty
+//1.9 tehty
