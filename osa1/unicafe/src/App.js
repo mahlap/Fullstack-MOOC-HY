@@ -4,14 +4,14 @@ const Statistics = (props) => {
   const All = props.good + props.bad + props.neutral
   if (All > 0) {
   return (
-    <>
-    <p>good {props.good}</p>
-    <p>neutral {props.neutral}</p>
-    <p>bad {props.bad}</p>
-    <p>all {All}</p>
-    <p>average {(props.good - props.bad) / All}</p>
-    <p>positive {(props.good / All)*100} %</p>
-    </>
+    <div>
+      <StatisticLine text="good" value ={props.good} />
+      <StatisticLine text="neutral" value ={props.neutral} />
+      <StatisticLine text="bad" value ={props.bad} />
+      <StatisticLine text="all" value ={All} />
+      <StatisticLine text="average" value ={(props.good - props.bad) / All} />
+      <StatisticLine text="positive" value ={(props.good / All)*100} prosentti="%"/>
+    </div>
   )
   } else {
     return (
@@ -20,6 +20,21 @@ const Statistics = (props) => {
       </>
     )
   }
+}
+
+const StatisticLine = (props) => {
+  return (<>
+  <p>{props.text} {props.value} {props.prosentti}</p>
+  </>
+  )
+}
+
+const Button = (props) => {
+  return (
+    <>
+    <button onClick={props.onClick}>{props.text}</button>
+    </>
+  )
 }
 
 const App = () => {
@@ -31,14 +46,14 @@ const App = () => {
   return (
     <div>
       <h1>give feedback</h1>
-      <button onClick={() => setGood(good + 1)}>good</button>
-      <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
-      <button onClick={() => setBad(bad + 1)}>bad</button>
+      <Button onClick={() => setGood(good + 1)} text="good" />
+      <Button onClick={() => setNeutral(neutral + 1)} text="neutral" />
+      <Button onClick={() => setBad(bad + 1)} text="bad" />
       <h1>statistics</h1>
-      <Statistics good={good} neutral={neutral} bad={bad}></Statistics>
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
 
 export default App
-//1.9 tehty
+//1.10 tehty
