@@ -4,14 +4,16 @@ const Statistics = (props) => {
   const All = props.good + props.bad + props.neutral
   if (All > 0) {
   return (
-    <div>
+    <table>
+      <tbody>
       <StatisticLine text="good" value ={props.good} />
       <StatisticLine text="neutral" value ={props.neutral} />
       <StatisticLine text="bad" value ={props.bad} />
       <StatisticLine text="all" value ={All} />
       <StatisticLine text="average" value ={(props.good - props.bad) / All} />
       <StatisticLine text="positive" value ={(props.good / All)*100} prosentti="%"/>
-    </div>
+      </tbody>
+    </table>
   )
   } else {
     return (
@@ -23,9 +25,10 @@ const Statistics = (props) => {
 }
 
 const StatisticLine = (props) => {
-  return (<>
-  <p>{props.text} {props.value} {props.prosentti}</p>
-  </>
+  return (
+  <tr>
+  <td>{props.text}</td><td>{props.value} {props.prosentti}</td>
+  </tr>
   )
 }
 
@@ -56,4 +59,3 @@ const App = () => {
 }
 
 export default App
-//1.10 tehty
