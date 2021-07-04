@@ -8,6 +8,8 @@ const Button = (props) => {
   )
 }
 
+
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -26,12 +28,17 @@ const App = () => {
     copy[selected] += 1
     setPoints(copy)
   }
+  let most = points.indexOf(Math.max(...points))    
   return (
     <div>
-      {anecdotes[selected]}
+      <h1>Anecdote of the day</h1>
       <br />
+      {anecdotes[selected]}
+      <p>has {points[selected]} votes</p>
       <Button onClick={() => setSelected(Math.floor(Math.random() * 7))} text="next anecdote"/>
       <Button onClick={() => handleVote()} text="vote"/>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[most]}</p>
     </div>
   )
 
@@ -39,5 +46,3 @@ const App = () => {
 }
 
 export default App
-
-//1.13 tehty
