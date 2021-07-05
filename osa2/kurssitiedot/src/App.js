@@ -7,9 +7,11 @@ const Header = ({ course }) => {
 }
 
 const Total = ({ course }) => {
-  const sum = course.parts[0].exercises + course.parts[1].exercises + course.parts[2].exercises
+  const total = course.parts.reduce((sum, parts) => 
+  parts.exercises + sum, 0)
+
   return(
-    <p>Number of exercises {sum}</p>
+    <p><strong>total of {total} exercises</strong></p>
   ) 
 }
 
@@ -36,6 +38,7 @@ const Course = ({ course }) => {
     <>
       <Header course={course}/>
       <Content course={course}/>
+      <Total course={course} />
     </>
   )
 }
@@ -72,4 +75,4 @@ const App = () => {
 
 export default App
 
-//2.1 tehty
+//2.3 tehty
