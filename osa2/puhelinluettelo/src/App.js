@@ -23,11 +23,15 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
-    const nameObject = {
+    if (persons.some(person => person.name === newName)) {
+      alert(`${newName} is already added to phonebook`)
+    } else {
+      const nameObject = {
       name: newName
     }
     setPersons(persons.concat(nameObject))
     setNewName('')
+  }
   }
 
   return (
@@ -49,4 +53,4 @@ const App = () => {
 }
 
 export default App
-//2.6 tehty
+//2.7 tehty
