@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const Filter = ( {handleFilter} ) => {
   return (
@@ -41,6 +42,15 @@ const App = () => {
   const [ showAll, setShowAll ] = useState(true) 
   const [ compare, setCompare ] = useState('') 
   
+  const hook = () => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }
+
+  useEffect(hook, [])
 
   const handleNameAdding = (event) => {
     setNewName(event.target.value)
