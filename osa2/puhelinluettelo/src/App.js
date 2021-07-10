@@ -1,5 +1,39 @@
 import React, { useState } from 'react'
 
+const Filter = ( {handleFilter} ) => {
+  return (
+    <div>
+      filter shown with <input onChange={handleFilter}></input>
+    </div>
+  )
+}
+
+const PersonForm = (props) => {
+  return (
+    <div>
+      <form onSubmit={props.addPerson}> 
+        <div>
+          name: <input value={props.newName} onChange={props.handleNameAdding}/>
+          number: <input value={props.newNumber} onChange={props.handleNumberAdding}/>
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+const Persons = ( {numbersToShow} ) => {
+  return (
+    <div>
+      {numbersToShow.map(person =>
+         <p key={person.name}>{person.name} {person.number}</p>
+         )}
+    </div>
+  )
+}
+
 const App = () => {
   const [ persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456' },
@@ -18,7 +52,6 @@ const App = () => {
   }
 
   const addPerson = (event) => {
-    console.log()
     event.preventDefault()
     if (persons.some(person => person.name === newName)) {
       alert(`${newName} is already added to phonebook`)
@@ -55,27 +88,14 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>filter shown with <input onChange={handleFilter}></input></div>
-      <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNameAdding}/>
-          number: <input value={newNumber} onChange={handleNumberAdding}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <div>
-      {numbersToShow.map(person =>
-         <p key={person.name}>{person.name} {person.number}</p>
-         )}
-      </div>
+      <Filter handleFilter={handleFilter}/>
+      <h3>add a new</h3>
+      <PersonForm addPerson={addPerson} newName={newName} handleNameAdding={handleNameAdding} newNumber={newNumber} handleNumberAdding={handleNumberAdding}/>
+      <h3>Numbers</h3>
+        <Persons numbersToShow={numbersToShow}/>
     </div>
   )
 
 }
 
 export default App
-//2.9 tehty 
