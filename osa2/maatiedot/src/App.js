@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 
-const Countries = ({ countries, compare }) => {
+const Countries = ({ countries, compare, handleClick }) => {
   let countriesToMap = countries.filter(country => country.name.toUpperCase().includes(compare.toUpperCase()))
   if(compare.length === 0) {
     return (
@@ -16,27 +16,33 @@ const Countries = ({ countries, compare }) => {
     )
   } else if (countriesToMap.length === 1) {
     return (
-      <div>
-        <h1>{countriesToMap[0].name}</h1>
-            <p>capital {countriesToMap[0].capital}</p>
-            <p>population {countriesToMap[0].population}</p>
-          <h2>languages</h2>
-            <ul>
-            {countriesToMap[0].languages.map(language => 
-              <li key={language.name}>{language.name}</li>)}
-            </ul>
-         <img alt={"flag of " + countriesToMap[0].name} width="50%" src={countriesToMap[0].flag}></img>   
-      </div>
+      <Country country={countriesToMap[0]} />
     )
   } else {
   return (
     <div>
       {countriesToMap.map(country => 
-        <p key={country.name}>{country.name}</p>
+        <p key={country.name}>{country.name} <button onClick={() => handleClick(country.name)}>show</button></p>
         )}
     </div>
   )
   }
+}
+
+const Country = ({ country }) => {
+  return (
+    <div>
+        <h1>{country.name}</h1>
+            <p>capital {country.capital}</p>
+            <p>population {country.population}</p>
+          <h2>languages</h2>
+            <ul>
+            {country.languages.map(language => 
+              <li key={language.name}>{language.name}</li>)}
+            </ul>
+         <img alt={"flag of " + country.name} width="50%" src={country.flag}></img>   
+      </div>
+  )
 }
 
 const App = () => {
@@ -57,14 +63,19 @@ const App = () => {
   const handleFilter = (event) => {
     setCompare(event.target.value)
   }
+
+  const handleClick = (country) => {
+    setCompare(country)
+  }
   
 
   return (
   <div>
     <div>find countries <input onChange={handleFilter}></input></div>
-    <Countries countries={countries} compare={compare}/>
+    <Countries countries={countries} compare={compare} handleClick ={handleClick}/>
   </div>
   )
 }
 
 export default App;
+//2.13 tehty
