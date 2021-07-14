@@ -40,8 +40,40 @@ const Country = ({ country }) => {
             {country.languages.map(language => 
               <li key={language.name}>{language.name}</li>)}
             </ul>
-         <img alt={"flag of " + country.name} width="50%" src={country.flag}></img>   
+         <img alt={"flag of " + country.name} width="50%" src={country.flag}></img>
+        <Weather capital={country.capital} />   
       </div>
+  )
+}
+
+const Weather = ({ capital }) => {
+  const [ temperature, setTemperature ] = useState('')
+  const [ wind, setWind ] = useState('')
+  const [ coordinates, setCoordinates ] = useState('')
+
+  const hook = () => {
+  axios
+    .get(`https://nominatim.openstreetmap.org/search?q=${capital}&format=geocodejson`) //I had to do this this way - I used too many API calls when I tested with a single API
+    .then(response => {
+      setCoordinates(response.data.features[0].geometry.coordinates)
+    })
+
+  axios
+    .get(`https://www.7timer.info/bin/astro.php?lon=${coordinates[0]}&lat=${coordinates[1]}ac=0&unit=metric&output=json&tzshift=0}`)
+    .then(response => {
+      setTemperature(response.data.dataseries[0].temp2m)
+      setWind(response.data.dataseries[0].wind10m)
+    })
+  }
+
+  useEffect(hook, [])
+
+  return (
+    <div>
+      <h2>Weather in {capital}</h2>
+        <p><strong>temperature: {temperature} °C</strong></p>
+        <p><strong>wind: {wind.speed} direction {wind.direction}</strong></p>
+    </div>
   )
 }
 
@@ -78,4 +110,4 @@ const App = () => {
 }
 
 export default App;
-//2.13 tehty
+//2.14 tehty
