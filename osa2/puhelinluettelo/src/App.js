@@ -26,11 +26,11 @@ const PersonForm = (props) => {
   )
 }
 
-const Persons = ( {numbersToShow} ) => {
+const Persons = ( {numbersToShow, handleDelete} ) => {
   return (
     <div>
       {numbersToShow.map(person =>
-         <p key={person.name}>{person.name} {person.number}</p>
+         <p key={person.name}>{person.name} {person.number} <button onClick={() => handleDelete(person.name, person.id)}>delete</button></p>
          )}
     </div>
   )
@@ -104,7 +104,15 @@ const App = () => {
   ? persons
   : persons.filter(person => person.name.toUpperCase().includes(compare.toUpperCase())) //does a better method exist?
 
-  
+  const handleDelete = (name, id) => {
+    if(window.confirm("Delete " + name + "?")) {
+      axios
+      .delete(`http://localhost:3001/persons/${id}`)
+      .catch(error => {
+        alert(`You have already deleted ${name}.`)
+      })
+    }
+  }
 
   return (
     <div>
@@ -113,7 +121,7 @@ const App = () => {
       <h3>add a new</h3>
       <PersonForm addPerson={addPerson} newName={newName} handleNameAdding={handleNameAdding} newNumber={newNumber} handleNumberAdding={handleNumberAdding}/>
       <h3>Numbers</h3>
-        <Persons numbersToShow={numbersToShow}/>
+        <Persons numbersToShow={numbersToShow} handleDelete={handleDelete}/>
     </div>
   )
 
