@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import personService from './services/persons'
 
 const Filter = ( {handleFilter} ) => {
   return (
@@ -36,6 +37,15 @@ const Persons = ( {numbersToShow} ) => {
 }
 
 const App = () => {
+
+  useEffect(() => {
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+      })
+  }, [])
+
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber] = useState('')
@@ -66,13 +76,14 @@ const App = () => {
       number: newNumber
     }
     
-    axios
-      .post('http://localhost:3001/persons', personObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+    personService
+      .create(personObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
       })
+
   }
   }
 
@@ -109,4 +120,4 @@ const App = () => {
 }
 
 export default App
-//2.15 tehty
+//2.16 tehty
