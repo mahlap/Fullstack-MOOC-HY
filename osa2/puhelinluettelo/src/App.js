@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import personService from './services/persons'
+import './index.css'
+
+const SuccessMessage = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="success">
+      {message}
+      </div>
+  )
+}
 
 const Filter = ( {handleFilter} ) => {
   return (
@@ -50,8 +63,8 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber] = useState('')
   const [ showAll, setShowAll ] = useState(true) 
-  const [ compare, setCompare ] = useState('') 
-  
+  const [ compare, setCompare ] = useState('')
+  const [ successMessage, setSuccessMessage ] = useState(null) 
   const hook = () => {
     axios
       .get('http://localhost:3001/persons')
@@ -68,20 +81,41 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
-    } else {
-      const personObject = {
+    const personObject = {
       name: newName,
       number: newNumber
     }
-    
+    if (persons.some(person => person.name === newName)) {
+      if(window.confirm(`${newName} is already added to phonebook`)) {
+        let updatePerson = persons.find(person => person.name === newName)
+        let copy = [...persons]
+        let index = copy.indexOf(updatePerson)
+        copy[index] = {name: newName, number: newNumber, id: updatePerson.id}
+        axios
+          .put(`http://localhost:3001/persons/${updatePerson.id}`, personObject)
+          setNewName('')
+          setNewNumber('')
+          setPersons(copy)
+          setSuccessMessage(
+          `Updated ${newName}`
+        )
+          setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+      }
+    } else {
     personService
       .create(personObject)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        setSuccessMessage(
+          `Added ${newName}`
+        )
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
       })
 
   }
@@ -106,8 +140,21 @@ const App = () => {
 
   const handleDelete = (name, id) => {
     if(window.confirm("Delete " + name + "?")) {
+      const deletePerson = persons.find(person => person.name === name)
+        let copy = [...persons]
+        let index = copy.indexOf(deletePerson)
+        copy.splice(index, 1)
+        setPersons(copy)
       axios
       .delete(`http://localhost:3001/persons/${id}`)
+      .then(() => {
+        setSuccessMessage(
+          `Deleted ${name}`
+        )
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+      })
       .catch(error => {
         alert(`You have already deleted ${name}.`)
       })
@@ -117,6 +164,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <SuccessMessage message={successMessage} />
       <Filter handleFilter={handleFilter}/>
       <h3>add a new</h3>
       <PersonForm addPerson={addPerson} newName={newName} handleNameAdding={handleNameAdding} newNumber={newNumber} handleNumberAdding={handleNumberAdding}/>
@@ -128,4 +176,4 @@ const App = () => {
 }
 
 export default App
-//2.16 tehty
+//2.20 tehty
