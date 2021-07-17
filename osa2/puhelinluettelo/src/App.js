@@ -14,6 +14,17 @@ const SuccessMessage = ({ message }) => {
       </div>
   )
 }
+const ErrorMessage = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="error">
+      {message}
+      </div>
+  )
+}
 
 const Filter = ( {handleFilter} ) => {
   return (
@@ -65,6 +76,7 @@ const App = () => {
   const [ showAll, setShowAll ] = useState(true) 
   const [ compare, setCompare ] = useState('')
   const [ successMessage, setSuccessMessage ] = useState(null) 
+  const [ errorMessage, setErrorMessage ] = useState(null) 
   const hook = () => {
     axios
       .get('http://localhost:3001/persons')
@@ -93,6 +105,7 @@ const App = () => {
         copy[index] = {name: newName, number: newNumber, id: updatePerson.id}
         axios
           .put(`http://localhost:3001/persons/${updatePerson.id}`, personObject)
+          .then(() => { 
           setNewName('')
           setNewNumber('')
           setPersons(copy)
@@ -101,7 +114,15 @@ const App = () => {
         )
           setTimeout(() => {
           setSuccessMessage(null)
-        }, 5000)
+        }, 5000)})
+        .catch(error => {
+          setErrorMessage(
+            `Information of ${newName} has already been removed from server`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
       }
     } else {
     personService
@@ -117,7 +138,6 @@ const App = () => {
           setSuccessMessage(null)
         }, 5000)
       })
-
   }
   }
 
@@ -156,7 +176,12 @@ const App = () => {
         }, 5000)
       })
       .catch(error => {
-        alert(`You have already deleted ${name}.`)
+        setErrorMessage(
+          `You have already deleted ${name}`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       })
     }
   }
@@ -165,6 +190,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <SuccessMessage message={successMessage} />
+      <ErrorMessage message={errorMessage} />
       <Filter handleFilter={handleFilter}/>
       <h3>add a new</h3>
       <PersonForm addPerson={addPerson} newName={newName} handleNameAdding={handleNameAdding} newNumber={newNumber} handleNumberAdding={handleNumberAdding}/>
@@ -176,4 +202,3 @@ const App = () => {
 }
 
 export default App
-//2.20 tehty
